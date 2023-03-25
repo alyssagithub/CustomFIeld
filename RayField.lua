@@ -127,12 +127,12 @@ end
 
 if gethui then
 	gethui()
-elseif syn.protect_gui then 
+elseif (syn and syn.protect_gui) then 
 	syn.protect_gui(Rayfield)
 	Rayfield.Parent = CoreGui
-	elseif CoreGui:FindFirstChild("RobloxGui") then
+elseif CoreGui:FindFirstChild("RobloxGui") then
 	Rayfield.Parent = CoreGui:FindFirstChild("RobloxGui")
-	else
+else
 	Rayfield.Parent = CoreGui
 end
 
@@ -2165,7 +2165,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 						table.insert(DropdownSettings.Items.Selected,OptionInTable)
 						RefreshSelected()
 					end
-					
+
 					local Success, Response = pcall(function()
 						DropdownSettings.Callback(Option)
 					end)
@@ -2173,9 +2173,9 @@ function RayfieldLibrary:CreateWindow(Settings)
 						Error('Callback Error')
 						print("Rayfield | "..DropdownSettings.Name.." Callback Error " ..tostring(Response))
 					end
-					
+
 					OptionInTable.Selected = true
-					
+
 					if not (Multi) then
 						for _,op in ipairs(DropdownSettings.Items.Selected) do
 							TweenService:Create(op.Option, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(30, 30, 30)}):Play()
@@ -2200,7 +2200,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 						TweenService:Create(Dropdown.Toggle, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {Rotation = 180}):Play()	
 						wait(0.35)
 						Dropdown.List.Visible = false
-						
+
 					end
 					Debounce = false
 					SaveConfiguration()
@@ -2223,16 +2223,16 @@ function RayfieldLibrary:CreateWindow(Settings)
 			function DropdownSettings:Add(Items,Selected)
 				AddOptions(Items,Selected)
 			end
-			
+
 			AddOptions(DropdownSettings.Options,DropdownSettings.CurrentOption)
-			
-            --fix
+
+			--fix
 			function DropdownSettings:Set(NewOption)
-				
+
 				for _,o in pairs(NewOption) do
 
 					if typeof(NewOption) == 'table' then
-						
+
 						DropdownSettings.Items.Selected = NewOption
 					else
 						DropdownSettings.Items.Selected = {NewOption}
@@ -2253,7 +2253,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 					if DropdownSettings.Items[NewOption] then
 						local DropdownOption =  DropdownSettings.Items[NewOption]
 						DropdownOption.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-						
+
 						if Dropdown.Visible then
 							DropdownOption.BackgroundTransparency = 0
 							DropdownOption.UIStroke.Transparency = 0
@@ -2263,7 +2263,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 							DropdownOption.UIStroke.Transparency = 1
 							DropdownOption.Title.TextTransparency = 1
 						end
-						
+
 					end
 				end
 				--Dropdown.Selected.Text = NewText
