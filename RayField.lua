@@ -122,18 +122,22 @@ local Rayfield = game:GetObjects("rbxassetid://11637506633")[1]
 
 --studio
 if game:GetService("RunService"):IsStudio() then
-	function gethui() return Rayfield end local http_request = nil local syn = {protect_gui = false,request = false,}local http = nil function writefile(tt,t,ttt)end function isfolder(t)end function makefolder(t)end function isfile(r)end function readfile(t)end
+	function gethui() return Rayfield end local http_request = nil; syn = {protect_gui = false,request = false,}; http = nil; function writefile(tt,t,ttt)end function isfolder(t)end function makefolder(t)end function isfile(r)end function readfile(t)end
 end
 
 if gethui then
 	gethui()
+	print("gethui")
 elseif (syn and syn.protect_gui) then 
 	syn.protect_gui(Rayfield)
 	Rayfield.Parent = CoreGui
+	print('elseif')
 elseif CoreGui:FindFirstChild("RobloxGui") then
 	Rayfield.Parent = CoreGui:FindFirstChild("RobloxGui")
+	print("elseif2")
 else
-	Rayfield.Parent = CoreGui
+	Rayfield.Parent = Players.LocalPlayer.PlayerGui
+	print("else")
 end
 
 print(Rayfield, (Rayfield and Rayfield.Parent), (Rayfield and Rayfield:GetChildren()[1].Name))
