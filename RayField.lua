@@ -124,6 +124,7 @@ if (syn and syn.protect_gui) then
 	syn.protect_gui(Rayfield)
 end
 
+Rayfield.Enabled = false
 Rayfield.Parent = Parent
 
 for _, Interface in ipairs(Parent:GetChildren()) do
@@ -1094,6 +1095,7 @@ function Minimise()
 end
 
 function RayfieldLibrary:CreateWindow(Settings)
+	Rayfield.Enabled = true
 	local Passthrough = false
 	Topbar.Title.Text = Settings.Name
 	Main.Size = UDim2.new(0, 450, 0, 260)
