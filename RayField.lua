@@ -120,38 +120,18 @@ local CoreGui = game:GetService("CoreGui")
 -- Interface Management
 local Rayfield = game:GetObjects("rbxassetid://11637506633")[1]
 
---studio
-if game:GetService("RunService"):IsStudio() then
-	function gethui() return Rayfield end local http_request = nil; syn = {protect_gui = false,request = false,}; http = nil; function writefile(tt,t,ttt)end function isfolder(t)end function makefolder(t)end function isfile(r)end function readfile(t)end
-end
+local Parent = CoreGui:FindFirstChild("RobloxGui") or CoreGui
 
 if (syn and syn.protect_gui) then 
 	syn.protect_gui(Rayfield)
-	Rayfield.Parent = CoreGui
-	print('elseif')
-elseif CoreGui:FindFirstChild("RobloxGui") then
-	Rayfield.Parent = CoreGui:FindFirstChild("RobloxGui")
-	print("elseif2")
-else
-	Rayfield.Parent = Players.LocalPlayer.PlayerGui
-	print("else")
 end
 
-print(Rayfield, (Rayfield and Rayfield.Parent), (Rayfield and Rayfield:GetChildren()[1].Name))
+Rayfield.Parent = Parent
 
-if gethui then
-	for _, Interface in ipairs(gethui():GetChildren()) do
-		if Interface.Name == Rayfield.Name and Interface ~= Rayfield then
-			Interface.Enabled = false
-			Interface.Name = "Rayfield-Old"
-		end
-	end
-else
-	for _, Interface in ipairs(CoreGui:GetChildren()) do
-		if Interface.Name == Rayfield.Name and Interface ~= Rayfield then
-			Interface.Enabled = false
-			Interface.Name = "Rayfield-Old"
-		end
+for _, Interface in ipairs(Parent:GetChildren()) do
+	if Interface.Name == Rayfield.Name and Interface ~= Rayfield then
+		Interface.Enabled = false
+		Interface.Name = "Rayfield-Old"
 	end
 end
 
@@ -1231,28 +1211,17 @@ function RayfieldLibrary:CreateWindow(Settings)
 			Rayfield.Enabled = false
 			local KeyUI = game:GetObjects("rbxassetid://11695805160")[1]
 			KeyUI.Enabled = true
-			if gethui then
-				KeyUI.Parent = gethui()
-			elseif syn.protect_gui then
+			if (syn and syn.protect_gui) then
 				syn.protect_gui(Rayfield)
-				KeyUI.Parent = CoreGui
-			else
-				KeyUI.Parent = CoreGui
 			end
 
-			if gethui then
-				for _, Interface in ipairs(gethui():GetChildren()) do
-					if Interface.Name == KeyUI.Name and Interface ~= KeyUI then
-						Interface.Enabled = false
-						Interface.Name = "KeyUI-Old"
-					end
-				end
-			else
-				for _, Interface in ipairs(CoreGui:GetChildren()) do
-					if Interface.Name == KeyUI.Name and Interface ~= KeyUI then
-						Interface.Enabled = false
-						Interface.Name = "KeyUI-Old"
-					end
+			KeyUI.Parent = Parent
+
+
+			for _, Interface in ipairs(Parent:GetChildren()) do
+				if Interface.Name == KeyUI.Name and Interface ~= KeyUI then
+					Interface.Enabled = false
+					Interface.Name = "KeyUI-Old"
 				end
 			end
 
