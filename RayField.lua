@@ -125,10 +125,7 @@ if game:GetService("RunService"):IsStudio() then
 	function gethui() return Rayfield end local http_request = nil; syn = {protect_gui = false,request = false,}; http = nil; function writefile(tt,t,ttt)end function isfolder(t)end function makefolder(t)end function isfile(r)end function readfile(t)end
 end
 
-if gethui then
-	gethui()
-	print("gethui")
-elseif (syn and syn.protect_gui) then 
+if (syn and syn.protect_gui) then 
 	syn.protect_gui(Rayfield)
 	Rayfield.Parent = CoreGui
 	print('elseif')
