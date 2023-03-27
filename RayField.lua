@@ -2204,43 +2204,40 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 			--fix
 			function DropdownSettings:Set(NewOption)
+				if typeof(NewOption) == "table" then
+					DropdownSettings.Items.Selected = NewOption
+				else
+					DropdownSettings.Items.Selected = {NewOption}
+				end
 
-				for _,o in pairs(NewOption) do
+				local Success, Response = pcall(function()
+					DropdownSettings.Callback(NewOption)
+				end)
+				
+				if not Success then
+					TweenService:Create(Dropdown, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)}):Play()
+					TweenService:Create(Dropdown.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
+					Dropdown.Title.Text = "Callback Error"
+					print("Rayfield | "..DropdownSettings.Name.." Callback Error " ..tostring(Response))
+					wait(0.5)
+					Dropdown.Title.Text = DropdownSettings.Name
+					TweenService:Create(Dropdown, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = SelectedTheme.ElementBackground}):Play()
+					TweenService:Create(Dropdown.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
+				end
+				if DropdownSettings.Items[NewOption] then
+					local DropdownOption =  DropdownSettings.Items[NewOption]
+					DropdownOption.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 
-					if typeof(NewOption) == 'table' then
-
-						DropdownSettings.Items.Selected = NewOption
+					if Dropdown.Visible then
+						DropdownOption.BackgroundTransparency = 0
+						DropdownOption.UIStroke.Transparency = 0
+						DropdownOption.Title.TextTransparency = 0
 					else
-						DropdownSettings.Items.Selected = {NewOption}
+						DropdownOption.BackgroundTransparency = 1
+						DropdownOption.UIStroke.Transparency = 1
+						DropdownOption.Title.TextTransparency = 1
 					end
-					local Success, Response = pcall(function()
-						DropdownSettings.Callback(NewOption)
-					end)
-					if not Success then
-						TweenService:Create(Dropdown, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)}):Play()
-						TweenService:Create(Dropdown.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
-						Dropdown.Title.Text = "Callback Error"
-						print("Rayfield | "..DropdownSettings.Name.." Callback Error " ..tostring(Response))
-						wait(0.5)
-						Dropdown.Title.Text = DropdownSettings.Name
-						TweenService:Create(Dropdown, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = SelectedTheme.ElementBackground}):Play()
-						TweenService:Create(Dropdown.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
-					end
-					if DropdownSettings.Items[NewOption] then
-						local DropdownOption =  DropdownSettings.Items[NewOption]
-						DropdownOption.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 
-						if Dropdown.Visible then
-							DropdownOption.BackgroundTransparency = 0
-							DropdownOption.UIStroke.Transparency = 0
-							DropdownOption.Title.TextTransparency = 0
-						else
-							DropdownOption.BackgroundTransparency = 1
-							DropdownOption.UIStroke.Transparency = 1
-							DropdownOption.Title.TextTransparency = 1
-						end
-
-					end
 				end
 				--Dropdown.Selected.Text = NewText
 			end
