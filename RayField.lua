@@ -2209,6 +2209,8 @@ function RayfieldLibrary:CreateWindow(Settings)
 				else
 					DropdownSettings.Items.Selected = {NewOption}
 				end
+				
+				DropdownSettings.CurrentOption = NewOption
 
 				local Success, Response = pcall(function()
 					DropdownSettings.Callback(NewOption)
