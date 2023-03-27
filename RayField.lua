@@ -1,4 +1,5 @@
---[[
+
+	--[[
 
 ArrayField Interface Suite
 by Meta
@@ -269,7 +270,7 @@ local function SaveConfiguration()
 		if v.Type == "ColorPicker" then
 			Data[i] = PackColor(v.Color)
 		else
-			Data[i] = v.CurrentValue or v.CurrentKeybind or v.Items or v.Color or v.CurrentOption
+			Data[i] = v.CurrentValue or v.CurrentKeybind or v.Color or v.CurrentOption
 		end
 	end	
 	writefile(ConfigurationFolder .. "/" .. CFileName .. ConfigurationExtension, tostring(HttpService:JSONEncode(Data)))
@@ -1219,7 +1220,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 			if syn.protect_gui then
 				syn.protect_gui(Rayfield)
 			end
-			
+
 			KeyUI.Parent = RayfieldParent
 
 			for _, Interface in ipairs(RayfieldParent:GetChildren()) do
@@ -1989,10 +1990,10 @@ function RayfieldLibrary:CreateWindow(Settings)
 						NT[#NT+1] = kj.Option.Name
 					end
 					Dropdown.Selected.Text = table.concat(NT, ", ")
-				elseif DropdownSettings.Items.Selected[1] then
-					Dropdown.Selected.Text = DropdownSettings.Items.Selected[1].Option.Name
+				elseif DropdownSettings.CurrentOption then
+					Dropdown.Selected.Text = DropdownSettings.CurrentOption
 				else
-					Dropdown.Selected.Text = "Select an option"
+					Dropdown.Selected.Text = "Select an Option"
 				end
 			end
 
@@ -2131,8 +2132,8 @@ function RayfieldLibrary:CreateWindow(Settings)
 						return
 					end
 					if not Multi and DropdownSettings.Items.Selected[1] then
-						DropdownSettings.Items.Selected[1].Selected = false
-						TweenService:Create(DropdownSettings.Items.Selected[1].Option, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(30, 30, 30)}):Play()
+						DropdownSettings.Items.Selected[1] = false
+						TweenService:Create(DropdownOption, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(30, 30, 30)}):Play()
 					end
 					if not (Multi) then
 						DropdownSettings.Items.Selected = {OptionInTable}
@@ -2141,6 +2142,8 @@ function RayfieldLibrary:CreateWindow(Settings)
 						table.insert(DropdownSettings.Items.Selected,OptionInTable)
 						RefreshSelected()
 					end
+
+					DropdownSettings.CurrentOption = Option
 
 					local Success, Response = pcall(function()
 						DropdownSettings.Callback(Option)
@@ -2200,22 +2203,19 @@ function RayfieldLibrary:CreateWindow(Settings)
 				AddOptions(Items,Selected)
 			end
 
-			AddOptions(DropdownSettings.Options,DropdownSettings.CurrentOption)
+			AddOptions(DropdownSettings.Options, DropdownSettings.CurrentOption)
 
 			--fix
 			function DropdownSettings:Set(NewOption)
+				for _,o in pairs({NewOption}) do
+					DropdownSettings.Items.Selected = {NewOption}
 
-				for _,o in pairs(NewOption) do
+					DropdownSettings.CurrentOption = NewOption
 
-					if typeof(NewOption) == 'table' then
-
-						DropdownSettings.Items.Selected = NewOption
-					else
-						DropdownSettings.Items.Selected = {NewOption}
-					end
 					local Success, Response = pcall(function()
 						DropdownSettings.Callback(NewOption)
 					end)
+
 					if not Success then
 						TweenService:Create(Dropdown, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)}):Play()
 						TweenService:Create(Dropdown.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
@@ -2226,20 +2226,21 @@ function RayfieldLibrary:CreateWindow(Settings)
 						TweenService:Create(Dropdown, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = SelectedTheme.ElementBackground}):Play()
 						TweenService:Create(Dropdown.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
 					end
-					if DropdownSettings.Items[NewOption] then
-						local DropdownOption =  DropdownSettings.Items[NewOption]
+					local DropdownOption = DropdownSettings.Items[NewOption]
+					if DropdownOption then
 						DropdownOption.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 
 						if Dropdown.Visible then
 							DropdownOption.BackgroundTransparency = 0
-							DropdownOption.UIStroke.Transparency = 0
-							DropdownOption.Title.TextTransparency = 0
+							--DropdownOption.UIStroke.Transparency = 0
+							--DropdownOption.Title.TextTransparency = 0
 						else
 							DropdownOption.BackgroundTransparency = 1
-							DropdownOption.UIStroke.Transparency = 1
-							DropdownOption.Title.TextTransparency = 1
+							--DropdownOption.UIStroke.Transparency = 1
+							--DropdownOption.Title.TextTransparency = 1
 						end
 
+						RefreshSelected()
 					end
 				end
 				--Dropdown.Selected.Text = NewText
